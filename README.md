@@ -4,9 +4,14 @@ Relational - Relational programming for Ruby
 
 # SYNOPSIS
 
-    > rel1 = Relational::Relation.from(CSV.table('path/to/data.csv')).where(->(row) { row[:created_at] > Date.today - 1 })
-    > rel2 = Relational::Relation.from(ActiveRecordInstance)
-    > rel1.join(rel2).select(:id, :name, :created_at).rename(:id, :record_id).to('path/to/output.csv')
+    class User < ActiveRecord::Base
+    end
+    
+    relational do
+      people = from('path/to/people.csv', schema: {created_at: :datetime, name: :string}).where(->(row) { person.created_at > Date.today - 1 })
+      users = from(User).select(:id, :name)
+      people.join(users).select(:id, :name, :created_at).rename(:id, :user_id).to('path/to/report.csv')
+    end
 
 # AUTHOR
 
