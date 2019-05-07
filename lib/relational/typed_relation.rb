@@ -128,7 +128,11 @@ module Relational
     attr_reader :schema
 
     def self.from(schema, data)
-      rel = new(schema, data)
+      rel = if data.is_a?(Relation)
+              new(schema, data.body)
+            else
+              new(schema, data)
+            end
       rel.validate!
       rel
     end

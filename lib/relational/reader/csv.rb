@@ -1,7 +1,7 @@
 require 'csv'
 
 module Relational
-  module Deserializer
+  module Reader
     class Csv
       def call(str)
         data = CSV.parse(str)

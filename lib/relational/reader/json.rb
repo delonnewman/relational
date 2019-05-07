@@ -1,7 +1,7 @@
 require 'json'
 
 module Relational
-  module Deserializer
+  module Reader
     class Json
       def call(str)
         JSON.parse(str).lazy.map do |row|

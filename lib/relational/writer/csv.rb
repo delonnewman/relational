@@ -1,5 +1,5 @@
 module Relational
-  module Serializer
+  module Writer
     class Csv
       def call(relation)
         CSV.generate do |csv|

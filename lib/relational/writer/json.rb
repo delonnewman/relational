@@ -1,7 +1,7 @@
 require 'json'
 
 module Relational
-  module Serializer
+  module Writer
     class Json
       def call(relation)
         relation.body.map(&:to_h).to_a.to_json
