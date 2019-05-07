@@ -64,7 +64,8 @@ module Relational
 
     def date_like?(value)
       date?(value) or integer?(value) or begin
-        Date.parse(value).valid_date?
+        Date.parse(value)
+        true
       rescue ArgumentError
         false
       end
@@ -76,7 +77,8 @@ module Relational
 
     def datetime_like?(value)
       datetime?(value) or integer?(value) or begin
-        DateTime.parse(value).valid_date?
+        DateTime.parse(value)
+        true
       rescue ArgumentError
         false
       end

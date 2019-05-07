@@ -145,11 +145,12 @@ module Relational
 
     def body
       @converted_body ||= @body.lazy.map do |tuple|
-        schema.map do |(attr, type)|
+        pairs = schema.map do |(attr, type)|
           val = tuple[attr]
           val_ = TYPE_CONVERTERS[type].call(val) or raise ConversionError, "There was an error converting #{val.inspect} to #{type.inspect}"
           [attr, val_]
-        end.to_h
+        end
+        Tuple[pairs]
       end
     end
 

@@ -13,5 +13,7 @@ module Relational
         raise "Undefined method #{meth}"
       end
     end
+    
+    alias to_a values
   end
 end
