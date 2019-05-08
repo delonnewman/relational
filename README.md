@@ -15,5 +15,5 @@ Relational - Relational programming for Ruby
 
 # AUTHOR
 
-Delon Newman <delnewman@salud.unm.edu>
+Delon Newman <contact@delonnewman.name>
 
