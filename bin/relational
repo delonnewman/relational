@@ -11,4 +11,5 @@ require "relational"
 # Pry.start
 
 require "irb"
+include Relational::FromMethod
 IRB.start(__FILE__)
