@@ -1,7 +1,8 @@
 module Relational
   class Relation
-    include Relational
     include Meta
+    include Enumerable
+    include Relational
 
     attr_reader :header, :body, :meta
 
@@ -21,6 +22,14 @@ module Relational
       @header = Set.new(header)
       @body = Set.new(body)
       @meta = meta
+    end
+
+    def each
+      if block_given?
+        body.each(&Proc.new)
+      else
+        body
+      end
     end
 
     def with_meta(meta)

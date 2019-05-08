@@ -18,7 +18,7 @@ Dir["#{__dir__}/relational/writer/*.rb"].entries.each(&method(:load))
 Dir["#{__dir__}/relational/adapter/*.rb"].entries.each(&method(:load))
 
 module Relational
-  def select(*attributes)
+  def project(*attributes)
     ProjectedRelation.new(self, Set.new(attributes))
   end
 
@@ -26,7 +26,7 @@ module Relational
     JoinedRelation.new(self, relation)
   end
 
-  def where(predicate)
+  def select(predicate)
     SelectedRelation.new(self, predicate)
   end
 
