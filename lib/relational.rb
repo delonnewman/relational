@@ -2,6 +2,7 @@ require 'set'
 require 'date'
 
 require 'relational/version'
+require 'relational/meta'
 require 'relational/relation'
 require 'relational/tuple'
 require 'relational/projection'

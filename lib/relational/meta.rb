@@ -4,7 +4,7 @@ module Meta
   end
 
   def meta
-    @meta
+    @meta || {}
   end
 
   def vary_meta

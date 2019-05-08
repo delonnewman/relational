@@ -29,9 +29,10 @@ module Relational
       end
     end
 
-    def to_a
+    def values
       attributes.map(&tuple)
     end
+    alias to_a values
 
     def transform_keys
       if block_given?
