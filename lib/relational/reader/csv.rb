@@ -3,7 +3,7 @@ require 'csv'
 module Relational
   module Reader
     class Csv
-      def call(str)
+      def call(str, _opts)
         data = CSV.parse(str)
         headers = data.first
         data.drop(1).map do |row|

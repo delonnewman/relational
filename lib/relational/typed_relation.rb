@@ -130,17 +130,17 @@ module Relational
     def self.from(data, opts = {})
       schema = opts[:schema] or raise ArgumentError, 'schema is required'
       rel = if data.is_a?(Relation)
-              new(schema, data.body)
+              new(schema, data.body, opts[:meta])
             else
-              new(schema, data)
+              new(schema, data, opts[:meta])
             end
       rel.validate!
       rel
     end
 
-    def initialize(schema, body)
+    def initialize(schema, body, meta = {})
       @schema = schema
-      super(schema.keys, body)
+      super(schema.keys, body, meta)
     end
 
     def validate!

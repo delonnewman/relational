@@ -1,30 +1,40 @@
 module Relational
   class Relation
     include Relational
+    include Meta
 
-    attr_reader :header, :body
+    attr_reader :header, :body, :meta
 
-    def self.from(data, _opts = {})
+    def self.from(data, opts = {})
       if data.is_a?(Relation)
-        data
+        if opts[:meta]
+          data.with_meta(opts[:meta])
+        else
+          data
+        end
       else
-        new(data.first.keys, data)
+        new(data.first.keys, data, opts[:meta])
       end
     end
 
-    def initialize(header, body)
+    def initialize(header, body, meta = {})
       @header = Set.new(header)
       @body = Set.new(body)
-    end
-    
-    def write(io, writer)
-      io.write(writer.call(self))
+      @meta = meta
     end
 
-    def to(file)
+    def with_meta(meta)
+      new(header, body, meta)
+    end
+    
+    def write(io, writer, opts = {})
+      io.write(writer.call(self, opts))
+    end
+
+    def to(file, opts = {})
       ext = File.extname(file)
       format = ext.slice(1, ext.length)
-      write(File.new(file, 'w'), writer(format))
+      write(File.new(file, 'w'), writer(format), opts)
     end
     
     def as(format)

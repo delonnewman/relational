@@ -3,7 +3,7 @@ require 'csv'
 module Relational
   module Writer
     class Csv
-      def call(relation)
+      def call(relation, _opts)
         CSV.generate do |csv|
           csv << relation.header
           relation.body.each do |tuple|

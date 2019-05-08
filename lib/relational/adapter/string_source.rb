@@ -10,9 +10,9 @@ module Relational
           if source.is_a?(String) and File.exists?(source)
             ext = File.extname(source)
             str = IO.read(source)
-            reader(ext.slice(1, ext.length)).call(str)
+            reader(ext.slice(1, ext.length)).call(str, opts)
           elsif source.is_a?(String) and opts[:format]
-            reader(opts[:format]).call(source)
+            reader(opts[:format]).call(source, opts)
           elsif source.is_a?(String)
             raise "Don't know how to read the given data. Strings should either be the name of a file that exists " \
                   "in the file system or the data format of the string should be given with the :format option."
