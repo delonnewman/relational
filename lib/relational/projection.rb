@@ -3,10 +3,9 @@ module Relational
     attr_reader :tuple, :attributes
 
     def self.[](*args)
+      return args.first if args.length == 1 and args.first.is_a?(Projection)
       h = if args.length == 1 and args.first.is_a?(Hash)
             args.first
-          elsif args.length == 1 and args.first.is_a?(Projection)
-            return args.first
           else
             Hash[*args]
           end
