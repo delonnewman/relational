@@ -1,3 +1,5 @@
+require 'csv'
+
 module Relational
   module Writer
     class Csv

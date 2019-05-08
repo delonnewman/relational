@@ -4,7 +4,7 @@ module Relational
 
     attr_reader :header, :body
 
-    def self.from(data)
+    def self.from(data, _opts = {})
       if data.is_a?(Relation)
         data
       else

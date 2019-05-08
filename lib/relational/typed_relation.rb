@@ -127,7 +127,8 @@ module Relational
 
     attr_reader :schema
 
-    def self.from(schema, data)
+    def self.from(data, opts = {})
+      schema = opts[:schema] or raise ArgumentError, 'schema is required'
       rel = if data.is_a?(Relation)
               new(schema, data.body)
             else
