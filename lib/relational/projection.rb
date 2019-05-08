@@ -2,6 +2,17 @@ module Relational
   class Projection
     attr_reader :tuple, :attributes
 
+    def self.[](*args)
+      h = if args.length == 1 and args.first.is_a?(Hash)
+            args.first
+          elsif args.length == 1 and args.first.is_a?(Projection)
+            return args.first
+          else
+            Hash[*args]
+          end
+      new(h, h.keys)
+    end
+
     def initialize(tuple, attributes)
       @tuple = tuple
       @attributes = attributes
@@ -36,7 +47,7 @@ module Relational
 
     def transform_keys
       if block_given?
-        Projection.new(tuple.transform_keys(&Proc.new), attributes.map(&Proc.new))
+        Projection.new(tuple.to_h.transform_keys(&Proc.new), attributes.map(&Proc.new))
       else
         raise 'A block is required to transform keys'
       end

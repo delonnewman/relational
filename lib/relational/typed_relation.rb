@@ -155,7 +155,7 @@ module Relational
           val_ = TYPE_CONVERTERS[type].call(val) or raise ConversionError, "There was an error converting #{val.inspect} to #{type.inspect}"
           [attr, val_]
         end
-        Tuple[pairs]
+        Projection[pairs]
       end
     end
 

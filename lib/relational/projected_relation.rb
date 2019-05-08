@@ -10,7 +10,7 @@ module Relational
 
     def body
       relation.body.lazy.map do |tuple|
-        Projection.new(tuple, header)
+        Projection.new(tuple.to_h, header)
       end
     end
   end
