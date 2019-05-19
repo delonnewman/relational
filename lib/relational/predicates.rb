@@ -64,8 +64,12 @@ module Relational
 
     def date_like?(value)
       date?(value) or integer?(value) or begin
-        Date.parse(value)
-        true
+        if value =~ /\d{1,2}\/\d{1,2}\/\d\d\d\d/
+          true
+        else
+          Date.parse(value)
+          true
+        end
       rescue ArgumentError
         false
       end
@@ -86,6 +90,10 @@ module Relational
 
     def time?(value)
       value.is_a?(Time)
+    end
+
+    def currency?(value)
+      numeric?(value) or value =~ /\$?\d+\.\d\d/
     end
   end
 end
