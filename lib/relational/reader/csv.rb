@@ -12,7 +12,7 @@ module Relational
           tuple = header.each_with_index.reduce({}) do |h, (attr, i)|
             h.merge(attr.to_sym => row[i])
           end
-          Projection[tuple]
+          Row[tuple]
         end
         Relation.new(header, body, opts[:meta])
       end

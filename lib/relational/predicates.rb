@@ -64,7 +64,7 @@ module Relational
 
     def date_like?(value)
       date?(value) or integer?(value) or begin
-        if value =~ /\d{1,2}\/\d{1,2}\/\d\d\d\d/
+        if value =~ /\d{1,2}\/\d{1,2}\/(\d\d)|(\d\d\d\d)/
           true
         else
           Date.parse(value)

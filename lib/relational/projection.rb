@@ -1,5 +1,5 @@
 module Relational
-  class Projection
+  class Projection < Row
     attr_reader :tuple, :attributes
 
     def self.[](*args)
@@ -38,6 +38,12 @@ module Relational
         h.merge(attr => tuple[attr])
       end
     end
+
+    def length
+      attributes.length
+    end
+
+    alias keys attributes
 
     def values
       attributes.map(&tuple)

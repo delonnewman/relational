@@ -1,17 +1,18 @@
 require 'set'
 require 'date'
 
-require 'relational/version'
-require 'relational/meta'
-require 'relational/relation'
-require 'relational/projection'
-require 'relational/joined_relation'
-require 'relational/projected_relation'
-require 'relational/selected_relation'
-require 'relational/renamed_relation'
-require 'relational/predicates'
-require 'relational/typed_relation'
-require 'relational/adapter'
+require_relative 'relational/version'
+require_relative 'relational/meta'
+require_relative 'relational/relation'
+require_relative 'relational/row'
+require_relative 'relational/projection'
+require_relative 'relational/joined_relation'
+require_relative 'relational/projected_relation'
+require_relative 'relational/selected_relation'
+require_relative 'relational/renamed_relation'
+require_relative 'relational/predicates'
+require_relative 'relational/typed_relation'
+require_relative 'relational/adapter'
 
 Dir["#{__dir__}/relational/type/*.rb"].entries.each(&method(:load))
 Dir["#{__dir__}/relational/reader/*.rb"].entries.each(&method(:load))
@@ -68,8 +69,12 @@ module Relational
   end
 
   # Returns the number of non-nil values of an attribute
-  def count(attr)
-    column(attr).count
+  def count(attr = nil)
+    if attr.nil?
+      super()
+    else
+      column(attr).count
+    end
   end
 
   # Returns the mean value of an attribute
@@ -108,19 +113,16 @@ module Relational
     if block_given?
       Relation.new(header, body.sort_by(&Proc.new))
     else
-      attr = attrs.first or raise 'At least one attribute is required'
-      if attrs.length == 1
-        Relation.new(header, body.sort_by(&attr.to_sym))
-      else
-        a = body.sort_by do |x|
-          val = x.send(attr)
-          attrs.drop(1).each do |attr|
-            val = val.send(attr)
-          end
-          val
-        end
-        Relation.new(header, a)
-      end
+      raise 'At least one attribute is required' if attrs.length < 1
+      Relation.new(header, body.sort { |a, b| a.compare(b, attrs) })
+    end
+  end
+
+  def sort
+    if block_given?
+      Relation.new(header, body.sort(&Proc.new))
+    else
+      Relation.new(header, body.sort)
     end
   end
 

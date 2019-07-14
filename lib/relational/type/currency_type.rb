@@ -3,7 +3,7 @@ module Relational
     class CurrencyType
       include Predicates
 
-      CURRENCY_REGEX = /\A(\-?\$?\d+\.\d+)|(\$?\(\d+\.\d+\))\z/.freeze
+      CURRENCY_REGEX = /\A(\-?\$?\d+(\.\d+)?)|(\$?\(\d+(\.\d+)?\))\z/.freeze
 
       def self.coercible?(value)
         numeric?(value) or string?(value) and not (value =~ CURRENCY_REGEX).nil?
@@ -27,6 +27,71 @@ module Relational
 
       def to_r
         @rep
+      end
+
+      def <=>(other)
+        if (gt = self > other).nil? and (lt = self < other).nil?
+          nil
+        elsif gt
+          1
+        elsif lt
+          -1
+        else
+          0
+        end
+      end
+
+      def >(other)
+        case other
+        when Rational
+          to_r > other
+        when Float
+          to_f > other
+        when Integer
+          to_i > other
+        when CurrencyType
+          to_r > other.to_r
+        else
+          if other.nil?
+            true
+          else
+            nil
+          end
+        end
+      end
+
+      def <(other)
+        case other
+        when Rational
+          to_r < other
+        when Float
+          to_f < other
+        when Integer
+          to_i < other
+        when CurrencyType
+          to_r < other.to_r
+        else
+          if other.nil?
+            false
+          else
+            nil
+          end
+        end
+      end
+
+      def ==(other)
+        case other
+        when Rational
+          to_r == other
+        when Float
+          to_f == other
+        when Integer
+          to_i == other
+        when CurrencyType
+          to_r == other.to_r
+        else
+          false
+        end
       end
 
       def to_f
@@ -75,6 +140,10 @@ module Relational
 
       def round(*args)
         @rep.round(*args)
+      end
+
+      def to_i
+        round
       end
 
       def ceil(*args)

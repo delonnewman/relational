@@ -53,7 +53,7 @@ module Relational
     def to_a
       body.map(&:to_h).to_a
     end
-    
+
     private
     
     def writer(format)

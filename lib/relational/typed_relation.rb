@@ -30,10 +30,14 @@ module Relational
       @converted_body ||= @body.lazy.map do |tuple|
         pairs = schema.map do |(attr, type)|
           val = tuple[attr]
-          val_ = type_class(type).convert(val) or raise ConversionError, "There was an error converting #{val.inspect} to #{type.inspect}"
+          val_ = if val.nil?
+                   val
+                 else
+                   type_class(type).convert(val) or raise ConversionError, "There was an error converting #{val.inspect} to #{type.inspect}"
+                 end
           [attr, val_]
         end
-        Projection[pairs]
+        Row[pairs]
       end
     end
 
@@ -42,14 +46,18 @@ module Relational
 
     private
 
+    def type_class_name(type)
+      "#{type.capitalize}Type"
+    end
+
     def type_class(type)
-      Relational::Type.const_get("#{type.capitalize}Type")
+      Relational::Type.const_get(type_class_name(type))
     end
 
     def validate_tuple!(tuple)
       schema.each do |(attr, type)|
         val = tuple[attr]
-        unless type_class(type).coercible?(val)
+        unless val.nil? or type_class(type).coercible?(val)
           raise ValidationError, "#{val.inspect} is not a valid #{type.inspect}"
         end
       end
