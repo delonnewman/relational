@@ -9,7 +9,16 @@ module Relational
     end
 
     def body
-      relation.body.lazy.select(&predicate)
+      case predicate
+      when Hash
+        relation.body.lazy.select do |row|
+          predicate.reduce(true) do |result, (attr, value)|
+            result and value === row[attr]
+          end
+        end
+      else
+        relation.body.lazy.select(&predicate)
+      end
     end
   end
 end

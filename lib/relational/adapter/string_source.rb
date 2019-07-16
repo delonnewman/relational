@@ -10,7 +10,7 @@ module Relational
           if source.is_a?(String) and File.exists?(source)
             ext = File.extname(source)
             str = IO.read(source)
-            reader(ext.slice(1, ext.length)).call(str, opts)
+            reader(opts.fetch(:format, ext.slice(1, ext.length))).call(str, opts)
           elsif source.is_a?(String) and opts[:format]
             reader(opts[:format]).call(source, opts)
           elsif source.is_a?(String)

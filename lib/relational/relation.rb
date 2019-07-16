@@ -20,7 +20,7 @@ module Relational
 
     def initialize(header, body, meta = {})
       @header = Set.new(header)
-      @body = Set.new(body)
+      @body = Set.new(body.reject(&:blank?)) if body
       @meta = meta
     end
 
@@ -42,12 +42,12 @@ module Relational
 
     def to(file, opts = {})
       ext = File.extname(file)
-      format = ext.slice(1, ext.length)
+      format = opts.fetch(:format, ext.slice(1, ext.length))
       write(File.new(file, 'w'), writer(format), opts)
     end
     
-    def as(format)
-      writer(format).call(self)
+    def as(format, opts = {})
+      writer(format).call(self, opts)
     end
     
     def to_a

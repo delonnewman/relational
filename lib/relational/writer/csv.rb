@@ -7,7 +7,7 @@ module Relational
         CSV.generate do |csv|
           csv << relation.header
           relation.body.each do |tuple|
-            csv << tuple.to_a
+            csv << tuple.values
           end
         end
       end

@@ -34,7 +34,7 @@ module Relational
     end
 
     def to_h
-      attributes.reduce({}) do |h, attr|
+      @hash ||= attributes.reduce({}) do |h, attr|
         h.merge(attr => tuple[attr])
       end
     end

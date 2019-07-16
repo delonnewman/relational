@@ -46,6 +46,20 @@ module Relational
   def column(attr)
     @column ||= Set.new(body.map(&attr.to_sym).reject(&:nil?))
   end
+  alias extract column
+
+  def transform_column(attr)
+    if block_given?
+      body_ = body.lazy.map do |row|
+        h = row.to_h
+        Row[h.merge(attr => yield(h[attr]))]
+      end
+      Relation.new(header, body_)
+    else
+      raise 'A block is required'
+    end
+  end
+  alias for transform_column
 
   # Returns the sum of the values of an attribute
   def sum(attr)

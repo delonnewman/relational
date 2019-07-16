@@ -26,6 +26,10 @@ module Relational
       @rep
     end
 
+    def blank?
+      @blank ||= to_h.values.all? { |v| v.nil? or v == '' }
+    end
+
     def [](key)
       @rep.fetch(key, nil)
     end
