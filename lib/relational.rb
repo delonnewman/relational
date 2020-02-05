@@ -7,6 +7,9 @@ require_relative 'relational/relation'
 require_relative 'relational/row'
 require_relative 'relational/projection'
 require_relative 'relational/joined_relation'
+require_relative 'relational/united_relation'
+require_relative 'relational/complementary_relation'
+require_relative 'relational/intersected_relation'
 require_relative 'relational/projected_relation'
 require_relative 'relational/selected_relation'
 require_relative 'relational/renamed_relation'
@@ -27,6 +30,7 @@ module Relational
   def join(relation)
     JoinedRelation.new(self, relation)
   end
+  alias * join
 
   # TODO: add Array and Hash Predicates
   def where(predicate = nil, &blk)
@@ -38,7 +42,35 @@ module Relational
     RenamedRelation.new(self, renamings)
   end
 
+  # TODO: check types for TypedRelation
+  def union_compatible?(other)
+    header == other.header
+  end
+
   # TODO: Add union (|,+), intersection (&), cartiesian-product (*), difference (-)
+  def union(other)
+    if union_compatible?(other)
+      UnitedRelation.new(self, other)
+    else
+      raise 'Cannot create a union with the given relation'
+    end
+  end
+  alias + union
+  alias | union
+
+  def difference(other)
+    ComplementaryRelation.new(self, other)
+  end
+  alias - difference
+
+  def intersection(other)
+    if union_compatible?(other)
+      IntersectedRelation.new(self, other)
+    else
+      raise 'Connot create a intersection with the given relation'
+    end
+  end
+  alias & intersection
 
   # Aggregate functions
 
@@ -46,7 +78,7 @@ module Relational
   def column(attr)
     @column ||= Set.new(body.map(&attr.to_sym).reject(&:nil?))
   end
-  alias extract column
+  alias pluck column
 
   def transform_column(attr)
     if block_given?
